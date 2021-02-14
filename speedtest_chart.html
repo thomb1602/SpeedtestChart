@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Speedtest Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+</head>
+
+<body>
+    <canvas id="chart" width="200" height="200"></canvas>
+
+    <script>
+
+        drawChartAsync();
+
+    
+        async function drawChartAsync() {
+            const data = await getDataAsync();
+
+            const ctx = document.getElementById('chart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.xs,
+                    datasets: [{
+                        label: 'Download',
+                        data: data.ys,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+            });
+        }
+
+        async function getDataAsync() {
+            const xs = [];
+            const ys = [];
+
+            const response = await fetch('test.csv');
+            const data = await response.text();
+            const table = data.split('\n').slice(1);
+            table.forEach(row => {
+                const rowArray = row.split(',');
+
+                const download = rowArray[6].match(/\d+/); //int pattern
+                ys.push(download);
+                const time = rowArray[0].slice(12, 17)
+                xs.push(time);
+            })
+            return { xs, ys }
+        }
+
+    </script>
+</body>
+
+</html>
