@@ -8,13 +8,12 @@
 </head>
 
 <body>
-    <canvas id="chart" width="200" height="200"></canvas>
+    <canvas id="chart" width="800" height="600"></canvas>
 
     <script>
 
         drawChartAsync();
 
-    
         async function drawChartAsync() {
             const data = await getDataAsync();
 
@@ -22,34 +21,47 @@
             const myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: data.xs,
+                    labels: data.times,
                     datasets: [{
                         label: 'Download',
-                        data: data.ys,
+                        data: data.downloads,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
                     }]
                 },
+                options: {
+                    responsive: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                suggestedMax: 70
+                            }
+                        }],
+                    }
+                }
             });
         }
 
         async function getDataAsync() {
-            const xs = [];
-            const ys = [];
+            const times = [];
+            const downloads = [];
+            const uploads = [];
 
             const response = await fetch('test.csv');
             const data = await response.text();
             const table = data.split('\n').slice(1);
+            const mbSpeedRegex = /[0-9]*[0-9].[0-9][0-9]/
             table.forEach(row => {
                 const rowArray = row.split(',');
+                const time = rowArray[0].slice(12, 17);
+                times.push(time);
+                downloads.push(rowArray[1].match(mbSpeedRegex));
+                uploads.push(rowArray[2].match(mbSpeedRegex));
 
-                const download = rowArray[6].match(/\d+/); //int pattern
-                ys.push(download);
-                const time = rowArray[0].slice(12, 17)
-                xs.push(time);
             })
-            return { xs, ys }
+            return { times, downloads, uploads }
         }
 
     </script>
