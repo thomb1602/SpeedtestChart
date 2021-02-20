@@ -29,14 +29,14 @@
         <div class="row">
             <div class="col-sm">
                 <div class="dropdown-div">
-                    <select name="Time period" id="time_period">
-                        <option value="6">1 hour</option> <!-- 6 items -->
-                        <option value="18">3 hours</option>
-                        <option value="36">6 hours</option>
-                        <option value="72">12 hours</option>
-                        <option value="144">1 day</option>
-                        <option value="432">3 days</option>
-                        <option value="720">5 days</option>
+                    <select name="Time period" id="time_period" onchange="drawTimePeriod(value)">
+                        <option value="12">1 hour</option> <!-- 6 items -->
+                        <option value="36">3 hours</option>
+                        <option value="72">6 hours</option>
+                        <option value="144">12 hours</option>
+                        <option value="432">1 day</option>
+                        <option value="720">3 days</option>
+                        <option value="1440">5 days</option>
                         </select>    
                 </div>
             </div>   
@@ -50,11 +50,17 @@
             $('select').selectize(
             {
                 create: true,
-                sortField: 'text'
             });    
         });
 
-        drawChartAsync();
+        // startWithDefault()
+
+        function startWithDefault()
+        {
+            sixHours = 72;
+            drawTimePeriod(sixHours);
+            $('select').val(sixHours);
+        }
 
         async function drawChartAsync(dataPoints) {
             const data = await getDataAsync(dataPoints);
@@ -100,10 +106,14 @@
             const downloads = [];
             const uploads = [];
 
-            const response = await fetch('test.csv');
+            const response = await fetch('output.csv');
             const data = await response.text();
-            const table = data.split('\n').slice(1);
-            const mbSpeedRegex = /[0-9]*[0-9].[0-9][0-9]/
+            table = data.split('\n').slice(1); // remove header
+            table = table.slice(0, (table.length - 1)) //remove trailing empty line
+            table = table.reverse();
+            table = table.slice(0, dataPoints); // get segment
+
+            const mbSpeedRegex = /[0-9]*[0-9].[0-9][0-9]/s
             table.forEach(row => {
                 const rowArray = row.split(',');
                 const time = rowArray[0].slice(12, 17);
@@ -112,7 +122,15 @@
                 uploads.push(rowArray[2].match(mbSpeedRegex));
 
             })
+            times.reverse();
+            downloads.reverse();
+            uploads.reverse();
             return { times, downloads, uploads }
+        }
+
+        function drawTimePeriod($period)
+        {
+            drawChartAsync($period)
         }
 
     </script>

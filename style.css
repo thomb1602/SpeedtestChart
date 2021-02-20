@@ -14,7 +14,7 @@ canvas, .dropdown-div {
     display: block;
 }
 
-option, select, label{
+option, select{
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
 }
