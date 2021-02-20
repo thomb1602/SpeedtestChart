@@ -29,14 +29,19 @@
         <div class="row">
             <div class="col-sm">
                 <div class="dropdown-div">
-                    <select name="Time period" id="time_period" onchange="drawTimePeriod(value)">
+                    <select name="Time period" id="time_period" onchange="passInputToChart()">
                         <option value="12">1 hour</option> <!-- 6 items -->
                         <option value="36">3 hours</option>
                         <option value="72">6 hours</option>
                         <option value="144">12 hours</option>
-                        <!-- <option value="432">1 day</option>
-                        <option value="720">3 days</option>
-                        <option value="1440">5 days</option> -->
+                    </select>    
+                </div>
+            </div>   
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div class="dropdown-div">
+                    <select name="day" id="day" onchange="passInputToChart()">
                     </select>    
                 </div>
             </div>   
@@ -45,12 +50,16 @@
 
     <script>
 
-        // set up styles dropdown
+        //startup
         $(function() {
+
+            // set up select styles
             $('select').selectize(
             {
                 create: true,
             });    
+
+            //populate date dropdown
         });
 
         // startWithDefault()
@@ -62,7 +71,15 @@
             $('select').val(sixHours);
         }
 
-        async function drawChartAsync(dataPoints) {
+        function passInputToChart()
+        {
+            const dataPoints = $('.time_period').val;
+            const date = $('.day');
+            
+            drawChartAsync(dataPoints, date)
+        }
+
+        async function drawChartAsync(dataPoints, day) {
             const data = await getDataAsync(dataPoints);
 
             const ctx = document.getElementById('chart').getContext('2d');
@@ -126,11 +143,6 @@
             downloads.reverse();
             uploads.reverse();
             return { times, downloads, uploads }
-        }
-
-        function drawTimePeriod($period)
-        {
-            drawChartAsync($period)
         }
 
     </script>
