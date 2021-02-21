@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-sm">
                 <div class="dropdown-div">
-                    <select name="Time period" id="time_period" onchange="passInputToChart()">
+                    <select name="Time period" id="time_period" onchange="drawChartAsync(value)">
                         <option value="12">1 hour</option> <!-- 6 items -->
                         <option value="36">3 hours</option>
                         <option value="72">6 hours</option>
@@ -79,10 +79,10 @@
             const dataPoints = $('.time_period').value;
             const date = $('.day').value;
             
-            drawChartAsync(dataPoints, date)
+            //call drawChartAsync() with both params passed in
         }
 
-        async function drawChartAsync(dataPoints, day) {
+        async function drawChartAsync(dataPoints) {
             const data = await getDataAsync(dataPoints);
 
             const ctx = document.getElementById('chart').getContext('2d');
