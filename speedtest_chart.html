@@ -58,8 +58,11 @@
             {
                 create: true,
             });    
+        });
 
+        $(async function() {
             //populate date dropdown
+            //archiveFiles = await fetch('archive');    get files from folder
         });
 
         // startWithDefault()
@@ -73,8 +76,8 @@
 
         function passInputToChart()
         {
-            const dataPoints = $('.time_period').val;
-            const date = $('.day');
+            const dataPoints = $('.time_period').value;
+            const date = $('.day').value;
             
             drawChartAsync(dataPoints, date)
         }
