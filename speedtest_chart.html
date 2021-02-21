@@ -120,13 +120,13 @@
 
             var $daySelect = $(document.getElementById('day')).selectize();
             var dayDropDown = $daySelect[0].selectize;
-            const date = dayDropDown.getValue();
-            
-            drawChartAsync(dataPoints, date)
+            var fileName = dayDropDown.getValue();
+            if(fileName != "output.csv") { fileName = 'archive/' + fileName}           
+            drawChartAsync(dataPoints, fileName)
         }
 
-        async function drawChartAsync(dataPoints, day) {
-            const data = await getDataAsync(dataPoints);
+        async function drawChartAsync(dataPoints, fileName) {
+            const data = await getDataAsync(dataPoints, fileName);
 
             const ctx = document.getElementById('chart').getContext('2d');
             const myChart = new Chart(ctx, {
@@ -164,12 +164,13 @@
             });
         }
 
-        async function getDataAsync(dataPoints) {
+        async function getDataAsync(dataPoints, fileName) {
             const times = [];
             const downloads = [];
             const uploads = [];
 
-            const response = await fetch('output.csv');
+            const response = await fetch(fileName);
+
             const data = await response.text();
             table = data.split('\n').slice(1); // remove header
             table = table.slice(0, (table.length - 1)) //remove trailing empty line
