@@ -60,12 +60,50 @@
             });    
         });
 
-        $(async function() {
-            //populate date dropdown
-            //archiveFiles = await fetch('archive');    get files from folder
-        });
+        populateDayAsync();
 
-        // startWithDefault()
+        async function populateDayAsync()
+        {
+            var $select = $(document.getElementById('day')).selectize();
+            var selectize = $select[0].selectize;
+            const todaysfileName = "output.csv";
+            selectize.addOption({value: todaysfileName, text: "Today"});
+            selectize.setValue(todaysfileName, true);
+            //selectize.addItem('2'); 
+
+            // get data for date dropdown
+            const archiveData = await getArchiveDatesAsync();
+            archiveData.dateLabels.reverse();
+            archiveData.filenames.reverse();
+            for (var i = 0; i<=archiveData.dateLabels.length; i++)
+            {
+                selectize.addOption({value: archiveData.filenames[i], text: archiveData.dateLabels[i]});
+            }
+        }
+
+        async function getArchiveDatesAsync()
+        {
+            const filenames = await getArchiveFilesAsync();
+            const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
+            const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+            const dateLabels = [];
+            filenames.forEach(row =>
+            {
+                const date = new Date(row.match(dateRegex));
+                dateLabels.push(date.toLocaleDateString('en-EN', dateOptions));
+            });
+            return{dateLabels, filenames};
+        }
+
+        async function getArchiveFilesAsync()
+        {
+            const filesPromise = await fetch('/archive/');
+            const files = await filesPromise.text();
+            const filenameRegex =  /output[0-9]*-[0-9]*-[0-9]*T[0-9]*.csv/g
+            const filenames = [...new Set(files.match(filenameRegex))];
+            return filenames;
+        }
+
 
         function startWithDefault()
         {
@@ -76,14 +114,19 @@
 
         function passInputToChart()
         {
-            const dataPoints = $('.time_period').value;
-            const date = $('.day').value;
-            
-            //call drawChartAsync() with both params passed in
+            var $timeSelect = $(document.getElementById('time_period')).selectize();
+            var timeDropDown = $timeSelect[0].selectize;
+            const dataPoints = timeDropDown.getValue();
+
+            var $daySelect = $(document.getElementById('day')).selectize();
+            var dayDropDown = $daySelect[0].selectize;
+            var fileName = dayDropDown.getValue();
+            if(fileName != "output.csv") { fileName = 'archive/' + fileName}           
+            drawChartAsync(dataPoints, fileName)
         }
 
-        async function drawChartAsync(dataPoints) {
-            const data = await getDataAsync(dataPoints);
+        async function drawChartAsync(dataPoints, fileName) {
+            const data = await getDataAsync(dataPoints, fileName);
 
             const ctx = document.getElementById('chart').getContext('2d');
             const myChart = new Chart(ctx, {
@@ -121,12 +164,13 @@
             });
         }
 
-        async function getDataAsync(dataPoints) {
+        async function getDataAsync(dataPoints, fileName) {
             const times = [];
             const downloads = [];
             const uploads = [];
 
-            const response = await fetch('output.csv');
+            const response = await fetch(fileName);
+
             const data = await response.text();
             table = data.split('\n').slice(1); // remove header
             table = table.slice(0, (table.length - 1)) //remove trailing empty line
