@@ -63,7 +63,12 @@
         });
 
         populateDayAsync();
+        onLoad();
 
+
+        //-----------------------------------------------------------------
+            // For populating the day drop down with human readable labels
+            // and filename values
         async function populateDayAsync()
         {
             var $select = $(document.getElementById('day')).selectize();
@@ -105,17 +110,26 @@
             const filenames = [...new Set(files.match(filenameRegex))];
             return filenames;
         }
+        //-----------------------------------------------------------------
 
-
-        function startWithDefault()
+        function onLoad()
         {
-            sixHours = 72;
-            drawTimePeriod(sixHours);
-            $('select').val(sixHours);
+            var timePeriod = 36; // 3 hours
+            var todaysfileName = "output.csv"; 
+            if(sessionStorage.getItem("time_period")) { timePeriod = sessionStorage.getItem("time_period");}
+            if(sessionStorage.getItem("day")) { todaysfileName = sessionStorage.getItem("day");}
+            
+            drawChartAsync(timePeriod, todaysfileName);
+        }
+
+        function setChoiceInSession(dataPoints, fileName)
+        {
+            sessionStorage.setItem("time_period", dataPoints);
+            sessionStorage.setItem("day", fileName);
         }
 
         function passInputToChart()
-        {
+        {            
             var $timeSelect = $(document.getElementById('time_period')).selectize();
             var timeDropDown = $timeSelect[0].selectize;
             const dataPoints = timeDropDown.getValue();
@@ -123,8 +137,11 @@
             var $daySelect = $(document.getElementById('day')).selectize();
             var dayDropDown = $daySelect[0].selectize;
             var fileName = dayDropDown.getValue();
-            if(fileName != "output.csv") { fileName = 'archive/' + fileName}           
-            drawChartAsync(dataPoints, fileName)
+
+            if(fileName != "output.csv") { fileName = 'archive/' + fileName} 
+
+            setChoiceInSession(dataPoints, fileName);          
+            drawChartAsync(dataPoints, fileName);
         }
 
         async function drawChartAsync(dataPoints, fileName) {
