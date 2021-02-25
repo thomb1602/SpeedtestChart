@@ -52,6 +52,9 @@
 
     <script>
 
+        const todayFileLocation = '\\desktop-p7mdido\Users\Tom\Desktop\speedtest\\';
+        const archiveLocation = '\\desktop-p7mdido\Users\Tom\Desktop\speedtest\\ResultsArchive\\';
+
         //startup
         $(function() {
 
@@ -63,7 +66,7 @@
         });
 
         populateDayAsync();
-        loadSelection();
+        loadSelection(); 
 
 
         //-----------------------------------------------------------------
@@ -73,7 +76,7 @@
         {
             var $select = $(document.getElementById('day')).selectize();
             var selectize = $select[0].selectize;
-            const todaysfileName = "output.csv";
+            const todaysfileName = todayFileLocation + "output.csv";
             selectize.addOption({value: todaysfileName, text: "Today"});
             selectize.setValue(todaysfileName, true);
             //selectize.addItem('2'); 
@@ -104,7 +107,7 @@
 
         async function getArchiveFilesAsync()
         {
-            const filesPromise = await fetch('/archive/');
+            const filesPromise = await fetch(archiveLocation);
             const files = await filesPromise.text();
             const filenameRegex =  /output[0-9]*-[0-9]*-[0-9]*T[0-9]*.csv/g
             const filenames = [...new Set(files.match(filenameRegex))];
@@ -115,7 +118,7 @@
         function loadSelection()
         {
             var timePeriod = 36; // 3 hours
-            var todaysfileName = "output.csv"; 
+            var todaysfileName = todayFileLocation + 'output.csv'; 
             if(sessionStorage.getItem("time_period")) { timePeriod = sessionStorage.getItem("time_period");}
             if(sessionStorage.getItem("day")) { todaysfileName = sessionStorage.getItem("day");}
             
@@ -138,7 +141,7 @@
             var dayDropDown = $daySelect[0].selectize;
             var fileName = dayDropDown.getValue();
 
-            if(fileName != "output.csv") { fileName = 'archive/' + fileName} 
+            if(! fileName.includes("output.csv")) { fileName = 'archive/' + fileName} 
 
             setChoiceInSession(dataPoints, fileName);          
             drawChartAsync(dataPoints, fileName);
