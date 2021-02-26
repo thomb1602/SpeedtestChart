@@ -52,9 +52,6 @@
 
     <script>
 
-        const todayFileLocation = '\\desktop-p7mdido\Users\Tom\Desktop\speedtest\\';
-        const archiveLocation = '\\desktop-p7mdido\Users\Tom\Desktop\speedtest\\ResultsArchive\\';
-
         //startup
         $(function() {
 
@@ -76,10 +73,9 @@
         {
             var $select = $(document.getElementById('day')).selectize();
             var selectize = $select[0].selectize;
-            const todaysfileName = todayFileLocation + "output.csv";
+            const todaysfileName =  "output.csv";
             selectize.addOption({value: todaysfileName, text: "Today"});
             selectize.setValue(todaysfileName, true);
-            //selectize.addItem('2'); 
 
             // get data for date dropdown
             const archiveData = await getArchiveDatesAsync();
@@ -107,7 +103,7 @@
 
         async function getArchiveFilesAsync()
         {
-            const filesPromise = await fetch(archiveLocation);
+            const filesPromise = await fetch('/archive/');
             const files = await filesPromise.text();
             const filenameRegex =  /output[0-9]*-[0-9]*-[0-9]*T[0-9]*.csv/g
             const filenames = [...new Set(files.match(filenameRegex))];
@@ -118,7 +114,7 @@
         function loadSelection()
         {
             var timePeriod = 36; // 3 hours
-            var todaysfileName = todayFileLocation + 'output.csv'; 
+            var todaysfileName = 'output.csv'; 
             if(sessionStorage.getItem("time_period")) { timePeriod = sessionStorage.getItem("time_period");}
             if(sessionStorage.getItem("day")) { todaysfileName = sessionStorage.getItem("day");}
             
@@ -141,7 +137,7 @@
             var dayDropDown = $daySelect[0].selectize;
             var fileName = dayDropDown.getValue();
 
-            if(! fileName.includes("output.csv")) { fileName = 'archive/' + fileName} 
+            if(fileName != "output.csv") { fileName = 'archive/' + fileName} 
 
             setChoiceInSession(dataPoints, fileName);          
             drawChartAsync(dataPoints, fileName);
