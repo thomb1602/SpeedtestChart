@@ -143,7 +143,7 @@
             var dayDropDown = $daySelect[0].selectize;
             var fileName = dayDropDown.getValue();
 
-            if(fileName != "output.csv") { fileName = 'archive/' + fileName} 
+            if(fileName != "output.csv") { fileName = '/archive/' + fileName} 
 
             setChoiceInSession(dataPoints, fileName);          
             drawChartAsync(dataPoints, fileName);
