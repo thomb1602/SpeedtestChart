@@ -15,5 +15,3 @@ function newConnection(socket)
 {
     console.log('new connection: ' + socket.id);
 }
-
-//set up routing
