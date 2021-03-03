@@ -5,8 +5,7 @@ body {
   }
 
 /* centers elements */
-/* , .dropdown-div  */
-canvas, .boxholder {
+canvas, .dropdown-div {
     padding-left: 0;
     padding-right: 0;
     padding-top: 20px;
