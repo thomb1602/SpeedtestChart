@@ -25,36 +25,40 @@
 
     <div class="outerbox">
         <div class="row">
-          <div class="col-sm">
+          <div class="col-md-12">
             <canvas id="chart" width="1600" height="600"></canvas>
           </div>
         </div>
         <div class="row">
-            <div class="col-sm">
-                <div class="dropdown-div">
-                    <select name="Time period" id="time_period" onchange="passInputToChart()">
-                        <option value="12">1 hour</option> <!-- 6 items -->
-                        <option value="36">3 hours</option>
-                        <option value="72">6 hours</option>
-                        <option value="144">12 hours</option>
-                        <option value="216">18 hours</option>
-                        <option value="288">24 hours</option>
-                    </select>    
-                </div>
+            <div class="col-md-6"> <!-- how to pull selects to the right? -->
+                <div class="d-flex "> 
+                    <div class="dropdown-div">
+                        <select name="Time period" id="time_period" onchange="passInputToChart()">
+                            <option value="12">1 hour</option> <!-- 6 items -->
+                            <option value="36">3 hours</option>
+                            <option value="72">6 hours</option>
+                            <option value="144">12 hours</option>
+                            <option value="216">18 hours</option>
+                            <option value="288">24 hours</option>
+                        </select>    
+                    </div>
+                    <div class="dropdown-div">
+                        <select name="day" id="day" onchange="passInputToChart()">
+                        </select>    
+                    </div>
+                </div> 
             </div>   
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                <div class="dropdown-div">
-                    <select name="day" id="day" onchange="passInputToChart()">
-                    </select>    
+            <div class="col-md-6">
+                <div class="d-flex "> 
+                    <p>wifi checkbox</p>
+                    <p>ethernet checkbox</p>
                 </div>
             </div>   
         </div>
     </div>
 
-    <script src="chartapp.js">
-    </script>
+    <script src="chartapp.js"></script>
+    <script src="UIelementsetup.js"></script>
 </body>
 
 </html>
