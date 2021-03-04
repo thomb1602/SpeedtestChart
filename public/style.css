@@ -4,8 +4,8 @@ body {
     color: white;
   }
 
-/* centers elements  ,.dropdown-div */
-canvas{
+/* centers elements  */
+canvas,.dropdown-div{
     padding-left: 0;
     padding-right: 0;
     padding-top: 20px;
@@ -21,6 +21,10 @@ option, select{
 
 .dropdown-div{
     width: 200px;    
+}
+
+input, label {
+    padding-right: 10px;
 }
 
 .outerbox
