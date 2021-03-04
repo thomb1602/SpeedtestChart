@@ -85,15 +85,21 @@ function passInputToChart()
     var dayDropDown = $daySelect[0].selectize;
     var fileName = dayDropDown.getValue();
 
+    const ethernet = document.getElementById("ethernet").checked;
+    const wifi = document.getElementById("wifi").checked;
+
     if(fileName != "output.csv") { fileName = '/archive/' + fileName} 
 
     sessionStorage.setItem("time_period", dataPoints);
     sessionStorage.setItem("day", fileName);
+    sessionStorage.setItem("ethernet", ethernet);
+    sessionStorage.setItem("wifi", wifi);
 
-    drawChartAsync(dataPoints, fileName);
+    drawChartAsync(dataPoints, fileName, ethernet, wifi);
 }
 
-async function drawChartAsync(dataPoints, fileName) {
+async function drawChartAsync(dataPoints, fileName, ethernet, wifi) {
+    
     const data = await getDataAsync(dataPoints, fileName);
 
     const ctx = document.getElementById('chart').getContext('2d');
