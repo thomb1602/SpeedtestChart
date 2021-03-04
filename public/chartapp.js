@@ -22,17 +22,17 @@
     {
         var $select = $(document.getElementById('day')).selectize();
         var selectize = $select[0].selectize;
-        const todaysfileName =  "output.csv";
-        selectize.addOption({value: todaysfileName, text: "Today"});
-        selectize.setValue(todaysfileName, true);
+     
+        selectize.addOption({value: "Today", text: "Today"});
+        selectize.setValue("Today", "Today");
 
         // get data for date dropdown
         const archiveData = await getArchiveDatesAsync();
         archiveData.dateLabels.reverse();
-        archiveData.filenames.reverse();
+        archiveData.dates.reverse();
         for (var i = 0; i<=archiveData.dateLabels.length; i++)
         {
-            selectize.addOption({value: archiveData.filenames[i], text: archiveData.dateLabels[i]});
+            selectize.addOption({value: archiveData.dates[i], text: archiveData.dateLabels[i]});
         }
     }
 
@@ -42,12 +42,14 @@
         const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
         const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
         const dateLabels = [];
+        const dates = [];
         filenames.forEach(row =>
         {
             const date = new Date(row.match(dateRegex));
+            dates.push(date);
             dateLabels.push(date.toLocaleDateString('en-EN', dateOptions));
         });
-        return{dateLabels, filenames};
+        return{dateLabels, dates};
     }
 
     async function getArchiveFilesAsync()
@@ -64,11 +66,15 @@
 function loadSelection()
 {
     var timePeriod = 36; // 3 hours
-    var todaysfileName = 'output.csv'; 
+    var date = 'Today'; 
+    var ethernet = true;
+    var wifi = true;
     if(sessionStorage.getItem("time_period")) { timePeriod = sessionStorage.getItem("time_period");}
-    if(sessionStorage.getItem("day")) { todaysfileName = sessionStorage.getItem("day");}
+    if(sessionStorage.getItem("date")) { date = sessionStorage.getItem("date");}
+    if(sessionStorage.getItem("ethernet")) { ethernet = sessionStorage.getItem("ethernet");}
+    if(sessionStorage.getItem("wifi")) { wifi = sessionStorage.getItem("wifi");}
     
-    drawChartAsync(timePeriod, todaysfileName);
+    drawChartAsync(timePeriod, date, ethernet, wifi);
 }
 
 
@@ -83,46 +89,77 @@ function passInputToChart()
 
     var $daySelect = $(document.getElementById('day')).selectize();
     var dayDropDown = $daySelect[0].selectize;
-    var fileName = dayDropDown.getValue();
+    var date = dayDropDown.getValue();
 
     const ethernet = document.getElementById("ethernet").checked;
     const wifi = document.getElementById("wifi").checked;
 
-    if(fileName != "output.csv") { fileName = '/archive/' + fileName} 
-
     sessionStorage.setItem("time_period", dataPoints);
-    sessionStorage.setItem("day", fileName);
+    sessionStorage.setItem("date", date);
     sessionStorage.setItem("ethernet", ethernet);
     sessionStorage.setItem("wifi", wifi);
 
-    drawChartAsync(dataPoints, fileName, ethernet, wifi);
+    drawChartAsync(dataPoints, date, ethernet, wifi);
 }
 
-async function drawChartAsync(dataPoints, fileName, ethernet, wifi) {
+async function drawChartAsync(dataPoints, date, ethernet, wifi) {
     
-    const data = await getDataAsync(dataPoints, fileName);
+    // TODO: now decide filename from date and wifi/ethernet
+    // and from date whether to add \archive\ or not
+    // will need to ossibly get TWO sets of data, using getDataAsync() twice
+    // date can = "Today" or today's date
+
+    var chartData = [];
+    var times;
+    if(ethernet && date == "Today")
+    {
+        const data = await getDataAsync(dataPoints, "ethernet.csv");
+        chartData.push( 
+        {
+            label: 'Ethernet Download',
+            data: data.downloads,
+            backgroundColor: 'rgba(164, 52, 235, 0.2)',
+            borderColor: 'rgba(164, 52, 235, 0.2)',
+            borderWidth: 1
+        });
+        chartData.push( 
+        {
+            label: 'Ethernet Upload',
+            data: data.uploads,
+            backgroundColor: 'rgba(235, 158, 52, 0.2)',
+            borderColor: 'rgba(235, 158, 52)',
+            borderWidth: 1
+        });
+        times = data.times;
+    }
+    if(wifi && date == "Today")
+    {
+        const data = await getDataAsync(dataPoints, "wifi.csv");
+        chartData.push( 
+        {
+            label: 'Wifi Download',
+            data: data.downloads,
+            backgroundColor: 'rgba(164, 52, 235, 0.2)',
+            borderColor: 'rgba(164, 52, 235, 0.2)',
+            borderWidth: 1
+        });
+        chartData.push( 
+        {
+            label: 'Wifi Upload',
+            data: data.uploads,
+            backgroundColor: 'rgba(235, 158, 52, 0.2)',
+            borderColor: 'rgba(235, 158, 52)',
+            borderWidth: 1
+        });
+        times = data.times;
+    }
 
     const ctx = document.getElementById('chart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: data.times,
-            datasets: [
-                {
-                    label: 'Download',
-                    data: data.downloads,
-                    backgroundColor: 'rgba(164, 52, 235, 0.2)',
-                    borderColor: 'rgba(164, 52, 235, 0.2)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Upload',
-                    data: data.uploads,
-                    backgroundColor: 'rgba(235, 158, 52, 0.2)',
-                    borderColor: 'rgba(235, 158, 52)',
-                    borderWidth: 1
-                }
-            ]
+            labels: times,
+            datasets: chartData
         },
         options: {
             responsive: false,
