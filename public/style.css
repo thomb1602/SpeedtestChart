@@ -27,3 +27,14 @@ option, select{
 {
     width:95%
 }
+
+
+/* 
+https://jsfiddle.net/0my82e2f/1/
+.selectize-control {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.selectize-control { display: inline-block; }
+.selectize-input { overflow: visible; padding: 4px 10px } */
