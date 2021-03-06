@@ -116,18 +116,18 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
         const data = await getDataAsync(dataPoints, "ethernet.csv");
         chartData.push( 
         {
-            label: 'Ethernet Download',
+            label: 'Ethernet Download', // dark blue
             data: data.downloads,
-            backgroundColor: 'rgba(164, 52, 235, 0.2)',
-            borderColor: 'rgba(164, 52, 235, 0.2)',
+            backgroundColor: 'rgba(0, 162, 232, 0.2)',
+            borderColor: 'rgba(0, 162, 232, 0.2)',
             borderWidth: 1
         });
         chartData.push( 
         {
-            label: 'Ethernet Upload',
+            label: 'Ethernet Upload', // light blue
             data: data.uploads,
-            backgroundColor: 'rgba(235, 158, 52, 0.2)',
-            borderColor: 'rgba(235, 158, 52)',
+            backgroundColor: 'rgba(153, 217, 234, 0.2)',
+            borderColor: 'rgba(153, 217, 234)',
             borderWidth: 1
         });
         times = data.times;
@@ -137,18 +137,18 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
         const data = await getDataAsync(dataPoints, "wifi.csv");
         chartData.push( 
         {
-            label: 'Wifi Download',
+            label: 'Wifi Download', // dark green
             data: data.downloads,
-            backgroundColor: 'rgba(164, 52, 235, 0.2)',
-            borderColor: 'rgba(164, 52, 235, 0.2)',
+            backgroundColor: 'rgba(34, 177, 76, 0.2)',
+            borderColor: 'rgba(34, 177, 76, 0.2)',
             borderWidth: 1
         });
         chartData.push( 
         {
-            label: 'Wifi Upload',
+            label: 'Wifi Upload', // light green
             data: data.uploads,
-            backgroundColor: 'rgba(235, 158, 52, 0.2)',
-            borderColor: 'rgba(235, 158, 52)',
+            backgroundColor: 'rgba(181, 230, 39, 0.2)',
+            borderColor: 'rgba(181, 230, 39)',
             borderWidth: 1
         });
         times = data.times;
