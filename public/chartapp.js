@@ -79,7 +79,7 @@ function loadSelection()
 
 
 //-----------------------------------------------------------------
-// Get chart input, drawchart
+// Get chart input, drawchart   was passInputToChart
 
 function passInputToChart()
 {            
@@ -99,18 +99,48 @@ function passInputToChart()
     sessionStorage.setItem("ethernet", ethernet);
     sessionStorage.setItem("wifi", wifi);
 
-    drawChartAsync(dataPoints, date, ethernet, wifi);
+    //drawChartAsync(dataPoints, date, ethernet, wifi);
+    loadSelection();
 }
 
 async function drawChartAsync(dataPoints, date, ethernet, wifi) {
     
-    // TODO: now decide filename from date and wifi/ethernet
-    // and from date whether to add \archive\ or not
-    // will need to ossibly get TWO sets of data, using getDataAsync() twice
-    // date can = "Today" or today's date
+    // TODO: get archive files too
 
+    // get chart data
     var chartData = [];
     var times;
+    var response = getChartDataAsync(dataPoints, date, ethernet, wifi);
+    chartData = (await response).chartData;
+    times = (await response).times;
+
+    // draw chart
+    const ctx = document.getElementById('chart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: times,
+            datasets: chartData
+        },
+        options: {
+            //responsive: false,    <-- did removing this fix the zoom bug?
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMax: 100
+                    }
+                }],
+            }
+        }
+    });
+}
+
+async function getChartDataAsync(dataPoints, date, ethernet, wifi)
+{
+    var chartData = [];
+    var times;
+
     if(ethernet && date == "Today")
     {
         const data = await getDataAsync(dataPoints, "ethernet.csv");
@@ -154,25 +184,8 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
         times = data.times;
     }
 
-    const ctx = document.getElementById('chart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: times,
-            datasets: chartData
-        },
-        options: {
-            responsive: false,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        suggestedMax: 100
-                    }
-                }],
-            }
-        }
-    });
+    return {chartData, times}
+
 }
 
 //-----------------------------------------------------------------
