@@ -81,7 +81,7 @@ function loadSelection()
 //-----------------------------------------------------------------
 // Get chart input, drawchart   was passInputToChart
 
-function passInputToChart()
+function setSelection()
 {            
     var $timeSelect = $(document.getElementById('time_period')).selectize();
     var timeDropDown = $timeSelect[0].selectize;
@@ -99,7 +99,6 @@ function passInputToChart()
     sessionStorage.setItem("ethernet", ethernet);
     sessionStorage.setItem("wifi", wifi);
 
-    //drawChartAsync(dataPoints, date, ethernet, wifi);
     loadSelection();
 }
 
@@ -123,7 +122,7 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
             datasets: chartData
         },
         options: {
-            //responsive: false,    <-- did removing this fix the zoom bug?
+            // responsive: false,    // <-- uncommented this causes zoom big
             scales: {
                 yAxes: [{
                     ticks: {
