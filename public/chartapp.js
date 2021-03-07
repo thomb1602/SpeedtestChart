@@ -65,6 +65,7 @@
 
 function loadSelection()
 {
+    // defaults
     var timePeriod = 36; // 3 hours
     var date = 'Today'; 
     var ethernet = true;
@@ -137,10 +138,12 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
 
 async function getChartDataAsync(dataPoints, date, ethernet, wifi)
 {
+    var ethernetBool = (ethernet == "true");
+    var wifiBool = (wifi == "true");
     var chartData = [];
     var times;
 
-    if(ethernet && date == "Today")
+    if(ethernetBool && date == "Today")
     {
         const data = await getDataAsync(dataPoints, "ethernet.csv");
         chartData.push( 
@@ -161,7 +164,7 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
         });
         times = data.times;
     }
-    if(wifi && date == "Today")
+    if(wifiBool && date == "Today")
     {
         const data = await getDataAsync(dataPoints, "wifi.csv");
         chartData.push( 

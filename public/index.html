@@ -33,7 +33,7 @@
             <div class="col-md-12"> <!-- how to pull selects to the right? -->
                 <div class=""> <!-- d-flex  float-right-->
                     <div class="dropdown-div">
-                        <select name="Time period" id="time_period" onchange="passInputToChart()">
+                        <select name="Time period" id="time_period" onchange="setSelection()">
                             <option value="12">1 hour</option> <!-- 6 items -->
                             <option value="36">3 hours</option>
                             <option value="72">6 hours</option>
@@ -43,13 +43,13 @@
                         </select>    
                     </div>
                     <div class="dropdown-div">
-                        <select name="day" id="day" onchange="passInputToChart()">
+                        <select name="day" id="day" onchange="setSelection()">
                         </select>    
                     </div>
                     <div class="dropdown-div"> 
-                        <input type="checkbox" id="ethernet" name="ethernet" checked/>
+                        <input type="checkbox" id="ethernet" name="ethernet" checked onchange="setSelection()"/>
                         <label for="ethernet">Ethernet</label>
-                        <input type="checkbox" id="wifi" name="wifi" checked/>
+                        <input type="checkbox" id="wifi" name="wifi" checked onchange="setSelection()"/>
                         <label for="wifi">Wifi</label>
                     </div>
                 </div> 
