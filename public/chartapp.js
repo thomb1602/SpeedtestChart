@@ -153,41 +153,49 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
         if(ethernetBool) { ethernetData = await getDataAsync(dataPoints, "\\archive\\ethernet\\" + date); }
         if(wifiBool)  { wifiData = await getDataAsync(dataPoints, "\\archive\\wifi\\" + date); }
     }
-    times = ethernetData.times;
-
+    
     // push data to chart
-    chartData.push( 
+    if(ethernetBool)
     {
-        label: 'Ethernet Download', // dark blue
-        data: ethernetData.downloads,
-        backgroundColor: 'rgba(0, 162, 232, 0.2)',
-        borderColor: 'rgba(0, 162, 232, 0.2)',
-        borderWidth: 1
-    });
-    chartData.push( 
+        times = ethernetData.times;
+        chartData.push( 
+            {
+                label: 'Ethernet Download', // dark blue
+                data: ethernetData.downloads,
+                backgroundColor: 'rgba(0, 162, 232, 0.2)',
+                borderColor: 'rgba(0, 162, 232, 0.2)',
+                borderWidth: 1
+            });
+            chartData.push( 
+            {
+                label: 'Ethernet Upload', // light blue
+                data: ethernetData.uploads,
+                backgroundColor: 'rgba(153, 217, 234, 0.2)',
+                borderColor: 'rgba(153, 217, 234)',
+                borderWidth: 1
+            });
+    }
+    if(wifiBool)
     {
-        label: 'Ethernet Upload', // light blue
-        data: ethernetData.uploads,
-        backgroundColor: 'rgba(153, 217, 234, 0.2)',
-        borderColor: 'rgba(153, 217, 234)',
-        borderWidth: 1
-    });
-    chartData.push( 
-    {
-        label: 'Wifi Download', // dark green
-        data: wifiData.downloads,
-        backgroundColor: 'rgba(34, 177, 76, 0.2)',
-        borderColor: 'rgba(34, 177, 76, 0.2)',
-        borderWidth: 1
-    });
-    chartData.push( 
-    {
-        label: 'Wifi Upload', // light green
-        data: wifiData.uploads,
-        backgroundColor: 'rgba(181, 230, 39, 0.2)',
-        borderColor: 'rgba(181, 230, 39)',
-        borderWidth: 1
-    });
+        times = wifiData.times;
+        chartData.push( 
+            {
+                label: 'Wifi Download', // dark green
+                data: wifiData.downloads,
+                backgroundColor: 'rgba(34, 177, 76, 0.2)',
+                borderColor: 'rgba(34, 177, 76, 0.2)',
+                borderWidth: 1
+            });
+            chartData.push( 
+            {
+                label: 'Wifi Upload', // light green
+                data: wifiData.uploads,
+                backgroundColor: 'rgba(181, 230, 39, 0.2)',
+                borderColor: 'rgba(181, 230, 39)',
+                borderWidth: 1
+            });
+    }
+    
     
     return {chartData, times}
 }
