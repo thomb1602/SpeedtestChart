@@ -29,10 +29,10 @@
         // get data for date dropdown
         const archiveData = await getArchiveDatesAsync();
         archiveData.dateLabels.reverse();
-        archiveData.dates.reverse();
+        archiveData.filenames.reverse();
         for (var i = 0; i<=archiveData.dateLabels.length; i++)
         {
-            selectize.addOption({value: archiveData.dates[i], text: archiveData.dateLabels[i]});
+            selectize.addOption({value: archiveData.filenames[i], text: archiveData.dateLabels[i]});
         }
     }
 
@@ -42,14 +42,12 @@
         const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
         const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
         const dateLabels = [];
-        const dates = [];
         filenames.forEach(row =>
         {
             const date = new Date(row.match(dateRegex));
-            dates.push(date);
             dateLabels.push(date.toLocaleDateString('en-EN', dateOptions));
         });
-        return{dateLabels, dates};
+        return{dateLabels, filenames};
     }
 
     async function getArchiveFilesAsync()
@@ -58,7 +56,7 @@
         const filesPromise = await fetch('/archive/index.txt');
         const files = await filesPromise.text();
         const filenameRegex =  /output[0-9]*-[0-9]*-[0-9]*T[0-9]*.csv/g
-        const filenames = [...new Set(files.match(filenameRegex))];
+        const filenames = files.split(/\r?\n/);
         return filenames;
     }
 //-----------------------------------------------------------------
@@ -104,12 +102,19 @@ function setSelection()
 }
 
 async function drawChartAsync(dataPoints, date, ethernet, wifi) {
-    
-    // TODO: get archive files too
-
+     
     // get chart data
-    var chartData = [];
-    var times;
+     var chartData = [];
+     var times;
+
+    // TODO: get archive files too
+    if(date != "Today")
+    {
+        alert(date);
+    }
+   
+
+
     var response = getChartDataAsync(dataPoints, date, ethernet, wifi);
     chartData = (await response).chartData;
     times = (await response).times;

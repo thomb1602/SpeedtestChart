@@ -1,9 +1,3 @@
-output2021-02-15T115700.csv
-output2021-02-16T115700.csv
-output2021-02-17T115700.csv
-output2021-02-18T115700.csv
-output2021-02-19T115700.csv
-output2021-02-20T104827.csv
-output2021-02-21T104827.csv
-output2021-02-22T104827.csv
-output2021-02-23T104827.csv
+output2021-02-21.csv
+output2021-02-22.csv
+output2021-02-23.csv
