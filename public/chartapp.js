@@ -104,16 +104,8 @@ function setSelection()
 async function drawChartAsync(dataPoints, date, ethernet, wifi) {
      
     // get chart data
-     var chartData = [];
-     var times;
-
-    // TODO: get archive files too
-    if(date != "Today")
-    {
-        alert(date);
-    }
-   
-
+    var chartData = [];
+    var times;
 
     var response = getChartDataAsync(dataPoints, date, ethernet, wifi);
     chartData = (await response).chartData;
@@ -147,52 +139,57 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
     var wifiBool = (wifi == "true");
     var chartData = [];
     var times;
+    var ethernetData;
+    var wifiData;
 
-    if(ethernetBool && date == "Today")
+    // get data
+    if(date == "Today")
     {
-        const data = await getDataAsync(dataPoints, "ethernet.csv");
-        chartData.push( 
-        {
-            label: 'Ethernet Download', // dark blue
-            data: data.downloads,
-            backgroundColor: 'rgba(0, 162, 232, 0.2)',
-            borderColor: 'rgba(0, 162, 232, 0.2)',
-            borderWidth: 1
-        });
-        chartData.push( 
-        {
-            label: 'Ethernet Upload', // light blue
-            data: data.uploads,
-            backgroundColor: 'rgba(153, 217, 234, 0.2)',
-            borderColor: 'rgba(153, 217, 234)',
-            borderWidth: 1
-        });
-        times = data.times;
+        if(ethernetBool) { ethernetData = await getDataAsync(dataPoints, "ethernet.csv"); }
+        if(wifiBool) { wifiData = await getDataAsync(dataPoints, "wifi.csv"); }
     }
-    if(wifiBool && date == "Today")
+    else
     {
-        const data = await getDataAsync(dataPoints, "wifi.csv");
-        chartData.push( 
-        {
-            label: 'Wifi Download', // dark green
-            data: data.downloads,
-            backgroundColor: 'rgba(34, 177, 76, 0.2)',
-            borderColor: 'rgba(34, 177, 76, 0.2)',
-            borderWidth: 1
-        });
-        chartData.push( 
-        {
-            label: 'Wifi Upload', // light green
-            data: data.uploads,
-            backgroundColor: 'rgba(181, 230, 39, 0.2)',
-            borderColor: 'rgba(181, 230, 39)',
-            borderWidth: 1
-        });
-        times = data.times;
+        if(ethernetBool) { ethernetData = await getDataAsync(dataPoints, "\\archive\\ethernet\\" + date); }
+        if(wifiBool)  { wifiData = await getDataAsync(dataPoints, "\\archive\\wifi\\" + date); }
     }
+    times = ethernetData.times;
 
+    // push data to chart
+    chartData.push( 
+    {
+        label: 'Ethernet Download', // dark blue
+        data: ethernetData.downloads,
+        backgroundColor: 'rgba(0, 162, 232, 0.2)',
+        borderColor: 'rgba(0, 162, 232, 0.2)',
+        borderWidth: 1
+    });
+    chartData.push( 
+    {
+        label: 'Ethernet Upload', // light blue
+        data: ethernetData.uploads,
+        backgroundColor: 'rgba(153, 217, 234, 0.2)',
+        borderColor: 'rgba(153, 217, 234)',
+        borderWidth: 1
+    });
+    chartData.push( 
+    {
+        label: 'Wifi Download', // dark green
+        data: wifiData.downloads,
+        backgroundColor: 'rgba(34, 177, 76, 0.2)',
+        borderColor: 'rgba(34, 177, 76, 0.2)',
+        borderWidth: 1
+    });
+    chartData.push( 
+    {
+        label: 'Wifi Upload', // light green
+        data: wifiData.uploads,
+        backgroundColor: 'rgba(181, 230, 39, 0.2)',
+        borderColor: 'rgba(181, 230, 39)',
+        borderWidth: 1
+    });
+    
     return {chartData, times}
-
 }
 
 //-----------------------------------------------------------------
