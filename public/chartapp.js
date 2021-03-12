@@ -120,7 +120,7 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
             datasets: chartData
         },
         options: {
-            // responsive: false,    // <-- uncommented this causes zoom big
+            //responsive: false,    // <-- uncommented this causes zoom bug, but wihtout it, chart won't centre >:(
             scales: {
                 yAxes: [{
                     ticks: {
