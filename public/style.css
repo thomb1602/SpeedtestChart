@@ -4,15 +4,19 @@ body {
     color: white;
   }
 
-/* centers elements */
-canvas, .dropdown-div {
+/* centers elements  */
+.dropdown-div {
     padding-left: 0;
     padding-right: 0;
-    padding-top: 20px;
     margin-left: auto;
     margin-right: auto;
     display: block;
+    padding-top: 20px;
 }
+
+canvas{
+    margin: 0 auto;
+    }
 
 option, select{
     font-size: 14px;
@@ -23,7 +27,22 @@ option, select{
     width: 200px;    
 }
 
+input, label {
+    padding-right: 10px;
+}
+
 .outerbox
 {
     width:95%
 }
+
+
+/* 
+https://jsfiddle.net/0my82e2f/1/
+.selectize-control {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.selectize-control { display: inline-block; }
+.selectize-input { overflow: visible; padding: 4px 10px } */
