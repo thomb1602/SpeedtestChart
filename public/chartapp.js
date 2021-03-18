@@ -53,7 +53,7 @@
     async function getArchiveFilesAsync()
     {
         //http://localhost:3000/archive/
-        const filesPromise = await fetch('/archive/index.txt');
+        const filesPromise = await fetch('/ResultsArchive/index.txt');
         const files = await filesPromise.text();
         const filenameRegex =  /output[0-9]*-[0-9]*-[0-9]*T[0-9]*.csv/g
         const filenames = files.split(/\r?\n/);
@@ -150,8 +150,8 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
     }
     else
     {
-        if(ethernetBool) { ethernetData = await getDataAsync(dataPoints, "\\archive\\ethernet\\" + date); }
-        if(wifiBool)  { wifiData = await getDataAsync(dataPoints, "\\archive\\wifi\\" + date); }
+        if(ethernetBool) { ethernetData = await getDataAsync(dataPoints, "\\ResultsArchive\\ethernet\\" + date); }
+        if(wifiBool)  { wifiData = await getDataAsync(dataPoints, "\\ResultsArchive\\wifi\\" + date); }
     }
     
     // push data to chart
