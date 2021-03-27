@@ -70,8 +70,8 @@ function loadSelection()
     var wifi = true;
     if(sessionStorage.getItem("time_period")) { timePeriod = parseInt(sessionStorage.getItem("time_period"));}
     if(sessionStorage.getItem("archive_filename")) { date = sessionStorage.getItem("archive_filename");}
-    if(sessionStorage.getItem("ethernet")) { ethernet = sessionStorage.getItem("ethernet");}
-    if(sessionStorage.getItem("wifi")) { wifi = sessionStorage.getItem("wifi");}
+    if(sessionStorage.getItem("ethernet")) { ethernet = (sessionStorage.getItem("ethernet") == "true");}
+    if(sessionStorage.getItem("wifi")) { wifi = (sessionStorage.getItem("wifi") == "true");}
     
     drawChartAsync(timePeriod, date, ethernet, wifi);
 }
@@ -135,8 +135,6 @@ async function drawChartAsync(dataPoints, date, ethernet, wifi) {
 
 async function getChartDataAsync(dataPoints, date, ethernet, wifi)
 {
-    var ethernetBool = (ethernet == "true");
-    var wifiBool = (wifi == "true");
     var chartData = [];
     var times;
     var ethernetData;
@@ -145,17 +143,17 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
     // get data
     if(date == "Today")
     {
-        if(ethernetBool || ethernet) { ethernetData = await getDataAsync(dataPoints, "ethernet.csv"); }
-        if(wifiBool || wifi) { wifiData = await getDataAsync(dataPoints, "wifi.csv"); }
+        if(ethernet) { ethernetData = await getDataAsync(dataPoints, "ethernet.csv"); }
+        if(wifi) { wifiData = await getDataAsync(dataPoints, "wifi.csv"); }
     }
     else
     {
-        if(ethernetBool || ethernet) { ethernetData = await getDataAsync(dataPoints, "\\ResultsArchive\\ethernet\\" + date); }
-        if(wifiBool || wifi)  { wifiData = await getDataAsync(dataPoints, "\\ResultsArchive\\wifi\\" + date); }
+        if(ethernet) { ethernetData = await getDataAsync(dataPoints, "\\ResultsArchive\\ethernet\\" + date); }
+        if(wifi)  { wifiData = await getDataAsync(dataPoints, "\\ResultsArchive\\wifi\\" + date); }
     }
     
     // push data to chart
-    if(ethernetBool || ethernet)
+    if(ethernet)
     {
         times = ethernetData.times;
         chartData.push( 
@@ -175,7 +173,7 @@ async function getChartDataAsync(dataPoints, date, ethernet, wifi)
                 borderWidth: 1
             });
     }
-    if(wifiBool || wifi)
+    if(wifi)
     {
         times = wifiData.times;
         chartData.push( 
