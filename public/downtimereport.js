@@ -59,11 +59,11 @@ function validateForm()
 
     if(start_date > end_date) {
         document.getElementById("downtimereport_form").innerText = "Start date must be before end date";
-        return {valid: false, start_date, end_date}; 
+        return false; 
     } 
     else { 
         resetValidation()
-        return {valid:true, start_date, end_date}; 
+        return true; 
     }   
 }
 
@@ -74,12 +74,21 @@ function resetValidation()
 
 function getDownTimeReport()
 {
-    const validationData = validateForm();
-    if(validationData.valid)
+    if(validateForm())
     {
         var $select = $(document.getElementById('threshold')).selectize();
         var threshold_select = $select[0].selectize;
-        const report_data = getDownTimeData(validationData.start_date, validationData.end_date, threshold_select.getValue());
+
+        var $select = $(document.getElementById('start_date')).selectize();
+        var start_date_select = $select[0].selectize;
+        var $select = $(document.getElementById('end_date')).selectize();
+        var end_date_select = $select[0].selectize;
+
+        const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
+        const start_date_val = start_date_select.getValue();
+        const end_date_val = end_date_select.getValue();
+
+        const report_data = getDownTimeData(start_date_val, end_date_val, threshold_select.getValue());
     }
 
 }
@@ -90,5 +99,6 @@ function getDownTimeData(startDate, endDate, threshold)
     var threshold_int;
     if(threshold == "") { threshold_int = 20; }
     else { threshold_int = parseInt(threshold); }
-    //var data = await getDataAsync(datapoints, )
+    
+    // do something to get the data using the range / "Today"
 }
