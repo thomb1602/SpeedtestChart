@@ -116,7 +116,7 @@ async function getDowntimeData(startDate, endDate, threshold)
             var eth = await getDataAsync(datapoints, "\\ResultsArchive\\ethernet\\" + getFileName(nextDate)); 
             var wifi = await getDataAsync(datapoints, "\\ResultsArchive\\wifi\\" + getFileName(nextDate)); 
             ethData.push(eth);
-            ethData.push(wifi);
+            wifiData.push(wifi);
             nextDate = addDays(nextDate, 1);
         }
     }
@@ -125,7 +125,7 @@ async function getDowntimeData(startDate, endDate, threshold)
         var eth = await getDataAsync(datapoints, "ethernet.csv"); 
         var wifi = await getDataAsync(datapoints, "wifi.csv"); 
         ethData.push(eth);
-        ethData.push(wifi);
+        wifiData.push(wifi);
     }
     
 }
