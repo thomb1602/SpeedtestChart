@@ -88,17 +88,58 @@ function getDownTimeReport()
         const start_date_val = start_date_select.getValue();
         const end_date_val = end_date_select.getValue();
 
-        const report_data = getDownTimeData(start_date_val, end_date_val, threshold_select.getValue());
+        const report_data = getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
     }
 
 }
 
-function getDownTimeData(startDate, endDate, threshold)
+async function getDowntimeData(startDate, endDate, threshold)
 {
     const datapoints  = 288; // whole day
     var threshold_int;
     if(threshold == "") { threshold_int = 20; }
     else { threshold_int = parseInt(threshold); }
+
+    var wifiData = [];
+    var ethData = [];
+
+    if(start_date != "Today" && end_date != "Today")
+    {
+        const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
+        var start = new Date(startDate.match(dateRegex));
+        const end = new Date(endDate.match(dateRegex));
+        
+        var nextDate = addDays(start, 1);
+        while(nextDate <= end)
+        {
+            var year = nextDate.getFullYear();
+            var eth = await getDataAsync(datapoints, "\\ResultsArchive\\ethernet\\" + getFileName(nextDate)); 
+            var wifi = await getDataAsync(datapoints, "\\ResultsArchive\\wifi\\" + getFileName(nextDate)); 
+            ethData.push(eth);
+            ethData.push(wifi);
+            nextDate = addDays(nextDate, 1);
+        }
+    }
+    if(endDate == "Today") // 2nd check technically redundant
+    {
+        var eth = await getDataAsync(datapoints, "ethernet.csv"); 
+        var wifi = await getDataAsync(datapoints, "wifi.csv"); 
+        ethData.push(eth);
+        ethData.push(wifi);
+    }
     
-    // do something to get the data using the range / "Today"
+}
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function getFileName(date)
+{
+    var unformattedMonth = date.getMonth() + 1
+    if(unformattedMonth <= 9) { unformattedMonth = "0" + unformattedMonth; }
+    var fileName = "output" + (date.getYear() + 1900) + "-" + unformattedMonth + "-" + date.getDate() + ".csv";
+    return fileName;
 }
