@@ -95,24 +95,46 @@ function getDownTimeReport()
 
 async function getDowntimeData(startDate, endDate, threshold)
 {
-    const datapoints  = 288; // whole day
     var threshold_int;
     if(threshold == "") { threshold_int = 20; }
     else { threshold_int = parseInt(threshold); }
 
+   const data = await getDataInRange(startDate, endDate);   
+   const buffer = 4;
+
+   var chartData = []; // contains data for multiple charts
+    for(var i = 0; i < data.ethData.length; i++) //for each day
+    { 
+        for(var j = 0; j < data.ethData[i].downloads.length; j++) // for each entry per file
+        {
+            var ethDataDownload = data.ethData[i].downloads[j];
+            var wifiDataDownload = data.wifiData[i].downloads[j];
+            if(ethDataDownload <= threshold_int || wifiDataDownload <= threshold_int)
+            {
+                var ethDataUpload = data.ethData[i].uploads[j];
+                var wifiDataUpload = data.wifiData[i].uploads[j];
+                console.log("wifi down: " + wifiDataDownload + " ethernet download: " + ethDataDownload);
+                //todo: use the buffer and collect data into objects
+            }
+        }
+    }
+}
+
+async function getDataInRange(startDate, endDate)
+{
+    const datapoints  = 288; // whole day
     var wifiData = [];
     var ethData = [];
 
     if(start_date != "Today" && end_date != "Today")
     {
         const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
-        var start = new Date(startDate.match(dateRegex));
+        const start = new Date(startDate.match(dateRegex));
         const end = new Date(endDate.match(dateRegex));
         
         var nextDate = addDays(start, 1);
         while(nextDate <= end)
         {
-            var year = nextDate.getFullYear();
             var eth = await getDataAsync(datapoints, "\\ResultsArchive\\ethernet\\" + getFileName(nextDate)); 
             var wifi = await getDataAsync(datapoints, "\\ResultsArchive\\wifi\\" + getFileName(nextDate)); 
             ethData.push(eth);
@@ -120,14 +142,15 @@ async function getDowntimeData(startDate, endDate, threshold)
             nextDate = addDays(nextDate, 1);
         }
     }
-    if(endDate == "Today") // 2nd check technically redundant
+    if(endDate == "Today")
     {
         var eth = await getDataAsync(datapoints, "ethernet.csv"); 
         var wifi = await getDataAsync(datapoints, "wifi.csv"); 
         ethData.push(eth);
         wifiData.push(wifi);
     }
-    
+
+    return{wifiData, ethData};
 }
 
 function addDays(date, days) {
