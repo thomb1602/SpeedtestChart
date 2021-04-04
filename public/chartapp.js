@@ -72,6 +72,10 @@ function loadSelection()
     if(sessionStorage.getItem("archive_filename")) { date = sessionStorage.getItem("archive_filename");}
     if(sessionStorage.getItem("ethernet")) { ethernet = (sessionStorage.getItem("ethernet") == "true");}
     if(sessionStorage.getItem("wifi")) { wifi = (sessionStorage.getItem("wifi") == "true");}
+
+    var $timeSelect = $(document.getElementById('time_period')).selectize();
+    var timeDropDown = $timeSelect[0].selectize;
+    timeDropDown.setValue(timePeriod, true);
     
     drawChartAsync(timePeriod, date, ethernet, wifi);
 }
