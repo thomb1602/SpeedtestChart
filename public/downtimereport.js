@@ -72,7 +72,7 @@ function resetValidation()
     document.getElementById("downtimereport_form").innerText = "";
 }
 
-function getDownTimeReport()
+async function getDownTimeReport()
 {
     if(validateForm())
     {
@@ -88,7 +88,7 @@ function getDownTimeReport()
         const start_date_val = start_date_select.getValue();
         const end_date_val = end_date_select.getValue();
 
-        const report_data = getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
+        const report_data = await getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
     }
 
 }
@@ -102,22 +102,79 @@ async function getDowntimeData(startDate, endDate, threshold)
    const data = await getDataInRange(startDate, endDate);   
    const buffer = 4;
 
-   var chartData = []; // contains data for multiple charts
+   var allChartData = []; // contains data for multiple charts
     for(var i = 0; i < data.ethData.length; i++) //for each day
     { 
         for(var j = 0; j < data.ethData[i].downloads.length; j++) // for each entry per file
         {
             var ethDataDownload = data.ethData[i].downloads[j];
             var wifiDataDownload = data.wifiData[i].downloads[j];
-            if(ethDataDownload <= threshold_int || wifiDataDownload <= threshold_int)
+            if(ethDataDownload != null && wifiDataDownload != null)
             {
-                var ethDataUpload = data.ethData[i].uploads[j];
-                var wifiDataUpload = data.wifiData[i].uploads[j];
-                console.log("wifi down: " + wifiDataDownload + " ethernet download: " + ethDataDownload);
-                //todo: use the buffer and collect data into objects
-            }
+                if(ethDataDownload <= threshold_int || wifiDataDownload <= threshold_int)
+                {
+                    var ethDataUpload = data.ethData[i].uploads[j];
+                    var wifiDataUpload = data.wifiData[i].uploads[j];
+                    console.log("wifi down: " + wifiDataDownload + " ethernet download: " + ethDataDownload);
+                    var startj = j;
+                    j -= buffer; 
+                    var ethDownSpeeds = [];
+                    var ethUpSpeeds = [];
+                    var wifiDownSpeeds = [];
+                    var wifiUpSpeeds = [];
+                    var times = [];
+                    while(j < startj + buffer)
+                    {
+                        ethDownSpeeds.push(data.ethData[i].downloads[j]);
+                        ethUpSpeeds.push(data.ethData[i].uploads[j]);
+                        wifiDownSpeeds.push(data.wifiData[i].downloads[j]);
+                        wifiUpSpeeds.push(data.wifiData[i].uploads[j]);
+                        times.push(data.ethData[i].times[j])
+                        j++
+                    }
+                    // todo: check if we need to extend into past or future so start & end of downtime is captured
+
+                    //add to a chart data
+                    var chartData = [];
+                    chartData.push( 
+                    {
+                        label: 'Ethernet Download', // dark blue
+                        data: ethDownSpeeds,
+                        backgroundColor: 'rgba(0, 162, 232, 0.2)',
+                        borderColor: 'rgba(0, 162, 232, 0.2)',
+                        borderWidth: 1
+                    });
+                    chartData.push( 
+                    {
+                        label: 'Ethernet Upload', // light blue
+                        data: ethUpSpeeds,
+                        backgroundColor: 'rgba(153, 217, 234, 0.2)',
+                        borderColor: 'rgba(153, 217, 234)',
+                        borderWidth: 1
+                    });
+                    chartData.push( 
+                    {
+                        label: 'Wifi Download', // dark green
+                        data: wifiDownSpeeds,
+                        backgroundColor: 'rgba(34, 177, 76, 0.2)',
+                        borderColor: 'rgba(34, 177, 76, 0.2)',
+                        borderWidth: 1
+                    });
+                    chartData.push( 
+                    {
+                        label: 'Wifi Upload', // light green
+                        data: wifiUpSpeeds,
+                        backgroundColor: 'rgba(181, 230, 39, 0.2)',
+                        borderColor: 'rgba(181, 230, 39)',
+                        borderWidth: 1
+                    });
+                    
+                    allChartData.push({chartData, times});
+                }
+            }           
         }
     }
+    return allChartData;
 }
 
 async function getDataInRange(startDate, endDate)
