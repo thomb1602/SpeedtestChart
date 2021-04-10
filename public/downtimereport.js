@@ -84,11 +84,29 @@ async function getDownTimeReport()
         var $select = $(document.getElementById('end_date')).selectize();
         var end_date_select = $select[0].selectize;
 
-        const dateRegex = /[0-9]*-[0-9]*-[0-9]*/g
         const start_date_val = start_date_select.getValue();
         const end_date_val = end_date_select.getValue();
 
         const report_data = await getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
+        const perRow = 4;
+        const numberOfRows = Math.ceil((report_data.length / perRow));
+        for(var i = 0; i < numberOfRows; i++)
+        {
+            const rowElem = "<div class=\"row\" id=\"row" + i + "\">";
+            $("#report_canvas").append(rowElem);
+            for(var  j = 0; j < perRow; j++)
+            {
+                // create bootstrap grid so each chart has a cell, and make that chart in each cell
+                var rowId = "#row" + i;
+                const colElem = "<div class=\"col-md-3\" id=\"col" + j + "\">";
+                $(rowId).append(colElem);
+                const labelElem = "<p> row: " + i + " col: " + j + "</p>";
+                var colId = "#col" + j;
+                $(colId).append(labelElem);
+            }
+            
+        }
+
     }
 
 }
@@ -113,9 +131,8 @@ async function getDowntimeData(startDate, endDate, threshold)
             {
                 if(ethDataDownload <= threshold_int || wifiDataDownload <= threshold_int)
                 {
-                    var ethDataUpload = data.ethData[i].uploads[j];
-                    var wifiDataUpload = data.wifiData[i].uploads[j];
-                    console.log("wifi down: " + wifiDataDownload + " ethernet download: " + ethDataDownload);
+                    console.log("eth down: " + ethDataDownload + " wifi down: " + wifiDataDownload);
+
                     var startj = j;
                     j -= buffer; 
                     var ethDownSpeeds = [];
