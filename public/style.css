@@ -59,6 +59,11 @@ button {
     bottom:0;
 }
 
+#downtimechart{
+    width="300px";
+    height="200px";
+}
+
 
 /* 
 https://jsfiddle.net/0my82e2f/1/

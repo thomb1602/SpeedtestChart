@@ -76,33 +76,64 @@ async function getDownTimeReport()
 {
     if(validateForm())
     {
+        // get form values
         var $select = $(document.getElementById('threshold')).selectize();
         var threshold_select = $select[0].selectize;
-
         var $select = $(document.getElementById('start_date')).selectize();
         var start_date_select = $select[0].selectize;
         var $select = $(document.getElementById('end_date')).selectize();
         var end_date_select = $select[0].selectize;
-
         const start_date_val = start_date_select.getValue();
         const end_date_val = end_date_select.getValue();
 
+        // get data
         const report_data = await getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
+        
+        // draw report
         const perRow = 4;
+        var counter = 0;
         const numberOfRows = Math.ceil((report_data.length / perRow));
         for(var i = 0; i < numberOfRows; i++)
         {
+            // add row
             const rowElem = "<div class=\"row\" id=\"row" + i + "\">";
             $("#report_canvas").append(rowElem);
+            
             for(var  j = 0; j < perRow; j++)
             {
-                // create bootstrap grid so each chart has a cell, and make that chart in each cell
+                // add col
                 var rowId = "#row" + i;
-                const colElem = "<div class=\"col-md-3\" id=\"col" + j + "\">";
+                var colElem = "<div class=\"col-md-3\" id=\"col" + j + "\">";
                 $(rowId).append(colElem);
-                const labelElem = "<p> row: " + i + " col: " + j + "</p>";
+                // add label
+                var labelElem = "<p> row: " + i + " col: " + j + "</p>";
                 var colId = "#col" + j;
                 $(colId).append(labelElem);
+                // add canvas
+                var canvasElem = "<canvas id=\"canvas" + counter + "\" class=\"downtimechart\">";
+                $(colId).append(canvasElem);
+                var canvasId = "canvas" + counter;
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: report_data[counter].times,
+                        datasets: report_data[counter].chartData
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    suggestedMax: 100
+                                }
+                            }],
+                        }
+                    }
+                });
+
+                counter = counter + 1;              
             }
             
         }
