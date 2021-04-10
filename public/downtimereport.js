@@ -92,7 +92,7 @@ async function getDownTimeReport()
         // draw report
         const perRow = 4;
         var counter = 0;
-        const numberOfRows = Math.ceil((report_data.length / perRow));
+        const numberOfRows = Math.ceil((report_data.allChartData.length / perRow));
         for(var i = 0; i < numberOfRows; i++)
         {
             // add row
@@ -105,10 +105,9 @@ async function getDownTimeReport()
                 var rowId = "#row" + i;
                 var colElem = "<div class=\"col-md-3\" id=\"col" + j + "\">";
                 $(rowId).append(colElem);
-                // add label
-                var labelElem = "<p> row: " + i + " col: " + j + "</p>";
+
                 var colId = "#col" + j;
-                $(colId).append(labelElem);
+                
                 // add canvas
                 var canvasElem = "<canvas id=\"canvas" + counter + "\" class=\"downtimechart\">";
                 $(colId).append(canvasElem);
@@ -117,8 +116,8 @@ async function getDownTimeReport()
                 const myChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: report_data[counter].times,
-                        datasets: report_data[counter].chartData
+                        labels: report_data.allChartData[counter].times,
+                        datasets: report_data.allChartData[counter].chartData
                     },
                     options: {
                         responsive: true,
@@ -132,6 +131,10 @@ async function getDownTimeReport()
                         }
                     }
                 });
+                // add label
+                var dateLabelElem = "<p>" + report_data.dateLabels[counter] + "</p>";
+                var colId = "#col" + j;
+                $(colId).append(dateLabelElem);
 
                 counter = counter + 1;              
             }
@@ -148,7 +151,8 @@ async function getDowntimeData(startDate, endDate, threshold)
     if(threshold == "") { threshold_int = 20; }
     else { threshold_int = parseInt(threshold); }
 
-   const data = await getDataInRange(startDate, endDate);   
+   const data = await getDataInRange(startDate, endDate); 
+   const dateLabels = data.dateLabels;  
    const buffer = 4;
 
    var allChartData = []; // contains data for multiple charts
@@ -163,7 +167,7 @@ async function getDowntimeData(startDate, endDate, threshold)
                 if(ethDataDownload <= threshold_int || wifiDataDownload <= threshold_int)
                 {
                     console.log("eth down: " + ethDataDownload + " wifi down: " + wifiDataDownload);
-
+                    
                     var startj = j;
                     j -= buffer; 
                     var ethDownSpeeds = [];
@@ -218,11 +222,12 @@ async function getDowntimeData(startDate, endDate, threshold)
                     });
                     
                     allChartData.push({chartData, times});
+                    dateLabels.push();
                 }
             }           
         }
     }
-    return allChartData;
+    return {allChartData, dateLabels};
 }
 
 async function getDataInRange(startDate, endDate)
@@ -230,6 +235,8 @@ async function getDataInRange(startDate, endDate)
     const datapoints  = 288; // whole day
     var wifiData = [];
     var ethData = [];
+    var dateLabels = [];
+    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
 
     if(start_date != "Today" && end_date != "Today")
     {
@@ -244,6 +251,9 @@ async function getDataInRange(startDate, endDate)
             var wifi = await getDataAsync(datapoints, "\\ResultsArchive\\wifi\\" + getFileName(nextDate)); 
             ethData.push(eth);
             wifiData.push(wifi);
+            // this just gets the date for each file we've found results in, 
+            // but I need the date for every instance of downtime
+            dateLabels.push(nextDate.toLocaleDateString('en-EN', dateOptions));
             nextDate = addDays(nextDate, 1);
         }
     }
@@ -255,7 +265,7 @@ async function getDataInRange(startDate, endDate)
         wifiData.push(wifi);
     }
 
-    return{wifiData, ethData};
+    return{wifiData, ethData, dateLabels};
 }
 
 function addDays(date, days) {
