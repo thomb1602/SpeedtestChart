@@ -76,6 +76,7 @@ async function getDownTimeReport()
 {
     if(validateForm())
     {
+
         // get form values
         var $select = $(document.getElementById('threshold')).selectize();
         var threshold_select = $select[0].selectize;
@@ -88,6 +89,14 @@ async function getDownTimeReport()
 
         // get data
         const report_data = await getDowntimeData(start_date_val, end_date_val, threshold_select.getValue());
+        
+        // remove canvas
+        $("#report_canvas").remove();
+
+        // re-add canvas
+        const reportCanvasElem = "<div class=\"row\" id=\"report_canvas\">";
+        const reportRowId = "report_row";;
+        $("#report_row").append(reportCanvasElem);
         
         // draw report
         const perRow = 4;
