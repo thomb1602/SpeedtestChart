@@ -132,7 +132,7 @@ async function getDownTimeReport()
                     }
                 });
                 // add label
-                var dateLabelElem = "<p>" + report_data.dateLabels[counter] + "</p>";
+                var dateLabelElem = "<p class = \"chartlabel\">" + report_data.dateLabels[counter] + "</p>";
                 var colId = "#col" + j;
                 $(colId).append(dateLabelElem);
 
