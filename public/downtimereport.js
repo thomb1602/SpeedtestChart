@@ -152,11 +152,11 @@ async function getDowntimeData(startDate, endDate, threshold)
     else { threshold_int = parseInt(threshold); }
 
    const data = await getDataInRange(startDate, endDate); 
-   const dateLabels = data.dateLabels;  
+   var dateLabels = [];
    const buffer = 4;
 
    var allChartData = []; // contains data for multiple charts
-    for(var i = 0; i < data.ethData.length; i++) //for each day
+    for(var i = 0; i < data.ethData.length; i++) // for each day
     { 
         for(var j = 0; j < data.ethData[i].downloads.length; j++) // for each entry per file
         {
@@ -222,7 +222,7 @@ async function getDowntimeData(startDate, endDate, threshold)
                     });
                     
                     allChartData.push({chartData, times});
-                    dateLabels.push();
+                    dateLabels.push(data.ethData[i].dateLabels[i]);
                 }
             }           
         }
@@ -249,11 +249,16 @@ async function getDataInRange(startDate, endDate)
         {
             var eth = await getDataAsync(datapoints, "\\ResultsArchive\\ethernet\\" + getFileName(nextDate)); 
             var wifi = await getDataAsync(datapoints, "\\ResultsArchive\\wifi\\" + getFileName(nextDate)); 
+            var date = nextDate;
+            // add date labels
+            var dateLabelArray = new Array(eth.times.length);
+            dateLabelArray.fill(nextDate.toLocaleDateString('en-EN', dateOptions));
+            eth.dateLabels = dateLabelArray;
+            wifi.dateLabels = dateLabelArray;
+
             ethData.push(eth);
             wifiData.push(wifi);
-            // this just gets the date for each file we've found results in, 
-            // but I need the date for every instance of downtime
-            dateLabels.push(nextDate.toLocaleDateString('en-EN', dateOptions));
+
             nextDate = addDays(nextDate, 1);
         }
     }
@@ -265,7 +270,7 @@ async function getDataInRange(startDate, endDate)
         wifiData.push(wifi);
     }
 
-    return{wifiData, ethData, dateLabels};
+    return{wifiData, ethData};
 }
 
 function addDays(date, days) {
