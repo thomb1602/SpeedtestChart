@@ -292,6 +292,8 @@ function getFileName(date)
 {
     var unformattedMonth = date.getMonth() + 1
     if(unformattedMonth <= 9) { unformattedMonth = "0" + unformattedMonth; }
-    var fileName = "output" + (date.getYear() + 1900) + "-" + unformattedMonth + "-" + date.getDate() + ".csv";
+    var unformattedDay = date.getDate();
+    if(unformattedDay <= 9) { unformattedDay = "0" + unformattedDay; }
+    var fileName = "output" + (date.getYear() + 1900) + "-" + unformattedMonth + "-" + unformattedDay + ".csv";
     return fileName;
 }
