@@ -275,6 +275,10 @@ async function getDataInRange(startDate, endDate)
     {
         var eth = await getDataAsync(datapoints, "ethernet.csv"); 
         var wifi = await getDataAsync(datapoints, "wifi.csv"); 
+        var dateLabelArray = new Array(eth.times.length);
+        dateLabelArray.fill("Today");
+        eth.dateLabels = dateLabelArray;
+        wifi.dateLabels = dateLabelArray;
         ethData.push(eth);
         wifiData.push(wifi);
     }
