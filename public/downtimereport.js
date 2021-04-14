@@ -163,6 +163,10 @@ async function getDownTimeReport()
                     var colId = "#col" + j;
                     $(colId).append(dateLabelElem);
 
+                    //add time of day icon
+                    var todElem = "<img id=\"legend\" class=\"legend\" src=\"images\\0-6.png\" >";
+                    $(colId).append(todElem);
+
                     // increment chart counter
                     counter = counter + 1;            
                 }                                   
