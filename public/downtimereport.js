@@ -129,6 +129,8 @@ async function getDownTimeReport()
                         datasets: report_data.allChartData[counter].chartData
                     },
                     options: {
+                        legend: { display: false },
+                        tooltips: { enabled: false },
                         responsive: true,
                         scales: {
                             yAxes: [{
@@ -136,7 +138,7 @@ async function getDownTimeReport()
                                     beginAtZero: true,
                                     suggestedMax: 100
                                 }
-                            }],
+                            }],                           
                         }
                     }
                 });
