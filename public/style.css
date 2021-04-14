@@ -65,12 +65,19 @@ button {
     color: rgb(204 204 204);
 }
 
-.downtimechart{
-    width="300px";
-    height="400px";
-    padding-top: 10px;
+.spacelabel{
+      padding-top: 15px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.89);
 }
 
+.downtimechart{
+   padding-top: 10px;
+}
+
+#legendbox{
+
+}
 
 /* 
 https://jsfiddle.net/0my82e2f/1/

@@ -116,42 +116,69 @@ async function getDownTimeReport()
                 $(rowId).append(colElem);
 
                 var colId = "#col" + j;
-                
-                // add canvas
-                var canvasElem = "<canvas id=\"canvas" + counter + "\" class=\"downtimechart\">";
-                $(colId).append(canvasElem);
-                var canvasId = "canvas" + counter;
-                const ctx = document.getElementById(canvasId).getContext('2d');
-                const myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: report_data.allChartData[counter].times,
-                        datasets: report_data.allChartData[counter].chartData
-                    },
-                    options: {
-                        legend: { display: false },
-                        tooltips: { enabled: false },
-                        responsive: true,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true,
-                                    suggestedMax: 100
-                                }
-                            }],                           
-                        }
-                    }
-                });
-                // add label
-                var dateLabelElem = "<p class = \"chartlabel\">" + report_data.dateLabels[counter] + "</p>";
-                var colId = "#col" + j;
-                $(colId).append(dateLabelElem);
 
-                counter = counter + 1;              
+                // add legend as first entry in matrix
+                if(i == 0 && j == 0)
+                {
+                    var legendboxElem = "<div id = \"legendbox\">";
+                    $(colId).append(legendboxElem);
+                    var legendElem = "<img id=\"legend\" class=\"legend\" src=\"images\\legend.png\" >";
+                    $("#legendbox").append(legendElem);
+
+                    // add empty label for alignment
+                    var dateLabelElem = "<p class = \"spacelabel\">.</p>";
+                    var colId = "#col" + j;
+                    $(colId).append(dateLabelElem);
+                }
+
+                else
+                {
+                    // add canvas
+                    var canvasElem = "<canvas id=\"canvas" + counter + "\" class=\"downtimechart\">";
+                    $(colId).append(canvasElem);
+                    var canvasId = "canvas" + counter;
+                    const ctx = document.getElementById(canvasId).getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: report_data.allChartData[counter].times,
+                            datasets: report_data.allChartData[counter].chartData
+                        },
+                        options: {
+                            legend: { display: false },
+                            tooltips: { enabled: false },
+                            responsive: true,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        suggestedMax: 100
+                                    }
+                                }],                           
+                            }
+                        }
+                    });
+                    // add label
+                    var dateLabelElem = "<p class = \"chartlabel\">" + report_data.dateLabels[counter] + "</p>";
+                    var colId = "#col" + j;
+                    $(colId).append(dateLabelElem);
+
+                    // increment chart counter
+                    counter = counter + 1;            
+                }                                   
             }
-            
         }
 
+        // make legend the same size as the charts
+        var somechart = $("#canvas" + (counter - 1));
+        var chartHeight = somechart.outerHeight();
+        var chartWidth = somechart.outerWidth();
+        $("#legendbox").width(chartWidth).height(chartHeight);
+        // centre img
+        var legendHeight = 61;
+        var legendWidth = 336;
+        $('#legendbox').find('*').css('padding-top', ((chartHeight - legendHeight) / 2).toString());
+        $('#legendbox').find('*').css('padding-left', ((chartWidth - legendWidth) / 2).toString());       
     }
 
 }
