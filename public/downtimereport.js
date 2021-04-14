@@ -164,8 +164,11 @@ async function getDownTimeReport()
                     $(colId).append(dateLabelElem);
 
                     //add time of day icon
-                    var todElem = "<img id=\"legend\" class=\"legend\" src=\"images\\0-6.png\" >";
-                    $(colId).append(todElem);
+                    // var todElem = "<img id=\"legend\" class=\"legend\" src=\"images\\0-6.png\" >";
+                    // $(colId).append(todElem);
+
+                    // TODO: replace this pic with one that's a screenshot of a graph made with chart.js
+                    // and decide which of the 4 to show based on the time held within the chart
 
                     // increment chart counter
                     counter = counter + 1;            
