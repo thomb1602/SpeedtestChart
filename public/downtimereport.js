@@ -182,8 +182,8 @@ async function getDownTimeReport()
         var chartWidth = somechart.outerWidth();
         $("#legendbox").width(chartWidth).height(chartHeight);
         // centre img
-        var legendHeight = 150; // not the actua dimensions, but centers it well
-        var legendWidth = 300;
+        var legendHeight = 182; // not the actua dimensions, but centers it well
+        var legendWidth = 332;
         $('#legendbox').find('*').css('padding-top', ((chartHeight - legendHeight) / 2).toString());
         $('#legendbox').find('*').css('padding-left', ((chartWidth - legendWidth) / 2).toString());       
     }
