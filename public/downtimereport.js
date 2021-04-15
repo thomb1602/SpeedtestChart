@@ -13,6 +13,19 @@ $(function() {
 
 populateForm()
 resetValidation()
+$("#summary").hide();
+
+function toggleCollapsible(button)
+{
+    button.classList.toggle("active");
+    var content = button.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+}
+
 
 async function populateForm()
 {
@@ -93,10 +106,11 @@ async function getDownTimeReport()
         // remove canvas
         $("#report_canvas").remove();
 
-        // re-add canvas
+        // re-add canvas & show summary
         const reportCanvasElem = "<div class=\"row\" id=\"report_canvas\">";
         const reportRowId = "report_row";;
         $("#report_row").append(reportCanvasElem);
+        $("#summary").show();
         
         // draw report
         const perRow = 4;
