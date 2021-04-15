@@ -122,7 +122,7 @@ async function getDownTimeReport()
                 {
                     var legendboxElem = "<div id = \"legendbox\">";
                     $(colId).append(legendboxElem);
-                    var legendElem = "<img id=\"legend\" class=\"legend\" src=\"images\\legend.png\" >";
+                    var legendElem = "<img id=\"legend\" class=\"legend\" src=\"images\\combinedlegend.png\" >";
                     $("#legendbox").append(legendElem);
 
                     // add empty label for alignment
@@ -182,8 +182,8 @@ async function getDownTimeReport()
         var chartWidth = somechart.outerWidth();
         $("#legendbox").width(chartWidth).height(chartHeight);
         // centre img
-        var legendHeight = 61;
-        var legendWidth = 336;
+        var legendHeight = 150; // not the actua dimensions, but centers it well
+        var legendWidth = 300;
         $('#legendbox').find('*').css('padding-top', ((chartHeight - legendHeight) / 2).toString());
         $('#legendbox').find('*').css('padding-left', ((chartWidth - legendWidth) / 2).toString());       
     }

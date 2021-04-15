@@ -13,7 +13,6 @@
     populateDayAsync();
     loadSelection(); 
 
-
 //-----------------------------------------------------------------
 // For populating the day drop down with human readable labels
 // and filename values
@@ -231,4 +230,97 @@ async function getDataAsync(dataPoints, fileName) {
     downloads.reverse();
     uploads.reverse();
     return { times, downloads, uploads }
+}
+
+function drawDonutChart()
+{
+    // add charts
+
+    var overnight = document.getElementById("overnight");
+    var overnightChart = new Chart(overnight, {
+      type: 'pie',
+      data: {
+        labels: ['Overnight', 'Day', 'Evening'],
+        datasets: [{
+          label: '# of Tomatoes',
+          data: [6, 4, 2],
+          backgroundColor: [
+            'rgba(86, 30, 149, 0.2)',
+            'rgba(159, 159, 159, 0.2)',
+            'rgba(159, 159, 159, 0.2)'
+          ],
+          borderColor: [
+            'rgba(86, 30, 149, 1)',
+            'rgba(159, 159, 159, 1)',
+            'rgba(159, 159, 159, 1)'
+          ],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        cutoutPercentage: 50,
+        rotation:16.5,
+        responsive: false,
+        legend: { display: false },
+      }
+    });
+
+    var daycanvas = document.getElementById("daycanvas");
+    var dayChart = new Chart(daycanvas, {
+      type: 'pie',
+      data: {
+        labels: ['Overnight', 'Day', 'Evening'],
+        datasets: [{
+          label: '# of Tomatoes',
+          data: [6, 4, 2],
+          backgroundColor: [
+            'rgba(159, 159, 159, 0.2)',
+            'rgba(255, 183, 13, 0.2)',
+            'rgba(159, 159, 159, 0.2)'
+          ],
+          borderColor: [
+            'rgba(159, 159, 159, 1)',
+            'rgba(255, 183, 13, 1)',
+            'rgba(159, 159, 159, 1)'
+          ],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        cutoutPercentage: 50,
+        rotation:16.5,
+        responsive: false,
+        legend: { display: false },
+      }
+    });
+
+    var evening = document.getElementById("evening");
+    var eveningChart = new Chart(evening, {
+      type: 'pie',
+      data: {
+        labels: ['Overnight', 'Day', 'Evening'],
+        datasets: [{
+          label: '# of Tomatoes',
+          data: [6, 4, 2],
+          backgroundColor: [
+            'rgba(159, 159, 159, 0.2)',
+            'rgba(159, 159, 159, 0.2)',
+            'rgba(63, 72, 204, 0.2)'
+          ],
+          borderColor: [
+            'rgba(159, 159, 159, 1)',
+            'rgba(159, 159, 159, 1)',
+            'rgba(63, 72, 204, 1)'
+          ],
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        cutoutPercentage: 50,
+        rotation:16.5,
+        responsive: false,
+        legend: { display: false },
+      }
+    });
+
 }

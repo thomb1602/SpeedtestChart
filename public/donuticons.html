@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>Speedtest Chart</title>
@@ -19,51 +22,27 @@
 </head>
 
 <body>
-    
+  
+
     <div class="outerbox">
-        <h1>Generate a downtime report</h1>
+
         <div class="row">
-            <a href="index.html">Back to chart</a>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-md-2">
-                <select name="Start date" id="start_date">
-                    <option value="" disabled selected>Start date</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select name="End date" id="end_date">
-                    <option value="" disabled selected>End date</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <select name="Threshold" id="threshold">
-                    <option value="" disabled selected>Threshold (Mb)</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                    <option value="60">60</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="button" onclick="getDownTimeReport()">Generate report</button>
-             </div>
-        </div>
-        <div class="row">
-            <br/>
-            <p class="validation" id="downtimereport_form"></p>
-        </div>
-        <div class="row" id="report_row">
-            <div id="report_canvas">
-                <!-- draw report -->
+            <div id="donutrow">
+                <canvas id="overnight" width="30" height="30"></canvas>
+                <br/>
+                <canvas id="daycanvas" width="30" height="30"></canvas>
+                <br/>
+                <canvas id="evening" width="30" height="30"></canvas>
             </div>
         </div>   
+        
     </div>
-    
 
     <script src="chartapp.js"></script>
-    <script src="downtimereport.js"></script>
+    <script src="UIelementsetup.js"></script>
+    <script>
+        drawDonutChart();
+    </script>
 </body>
+
+</html>
