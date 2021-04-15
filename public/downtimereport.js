@@ -158,17 +158,20 @@ async function getDownTimeReport()
                             }
                         }
                     });
+
+                    // pick icon 
+                    const dayStart = Date.parse("2011-10-10T07:00:00");
+                    const eveStart = Date.parse("2011-10-10T17:00:00");
+                    var iconFileName = "evening.png"; // default
+                    var centreChartTime = report_data.allChartData[counter].times[4];
+                    var centreDatetime = Date.parse("2011-10-10T" + centreChartTime + ":00"); // this is just some random date because js has no time type
+                    if(centreDatetime < dayStart) { iconFileName = "overnight.png"; }
+                    else if (centreDatetime < eveStart) { iconFileName = "day.png"; }
+
                     // add label
-                    var dateLabelElem = "<p class = \"chartlabel\">" + report_data.dateLabels[counter] + "</p>";
+                    var dateLabelElem = "<p class = \"chartlabel\">" + report_data.dateLabels[counter] + "<img id=\"legend\" class=\"todIcon\" src=\"images\\" + iconFileName + " \" ></p>";
                     var colId = "#col" + j;
                     $(colId).append(dateLabelElem);
-
-                    //add time of day icon
-                    // var todElem = "<img id=\"legend\" class=\"legend\" src=\"images\\0-6.png\" >";
-                    // $(colId).append(todElem);
-
-                    // TODO: replace this pic with one that's a screenshot of a graph made with chart.js
-                    // and decide which of the 4 to show based on the time held within the chart
 
                     // increment chart counter
                     counter = counter + 1;            
