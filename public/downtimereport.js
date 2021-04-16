@@ -111,6 +111,9 @@ async function getDownTimeReport()
         const reportRowId = "report_row";;
         $("#report_row").append(reportCanvasElem);
         $("#summary").show();
+
+        // draw summary
+        $("#total_downtime_text").text("Total downtime: " + report_data.totalDowntime.hours + "hrs " + report_data.totalDowntime.minutes + "mins");
         
         // draw report
         const perRow = 4;
@@ -215,6 +218,8 @@ async function getDowntimeData(startDate, endDate, threshold)
 
    const data = await getDataInRange(startDate, endDate); 
    var dateLabels = [];
+   var totalDowntime = []; // hours, minutes
+   totalDowntime.minutes = 0
    const buffer = 4;
 
    var allChartData = []; // contains data for multiple charts
@@ -243,9 +248,16 @@ async function getDowntimeData(startDate, endDate, threshold)
                         ethUpSpeeds.push(data.ethData[i].uploads[j]);
                         wifiDownSpeeds.push(data.wifiData[i].downloads[j]);
                         wifiUpSpeeds.push(data.wifiData[i].uploads[j]);
+
                         times.push(data.ethData[i].times[j])
+                        if(threshold > data.ethData[i].downloads[j] | threshold > data.wifiData[i].downloads[j]) 
+                        { 
+                            totalDowntime.minutes = totalDowntime.minutes + 5; 
+                        }
+
                         j++
                     }
+
                     // todo: check if we need to extend into past or future so start & end of downtime is captured
 
                     //add to a chart data
@@ -289,7 +301,10 @@ async function getDowntimeData(startDate, endDate, threshold)
             }           
         }
     }
-    return {allChartData, dateLabels};
+    // convert downtime minutes to minutes and hours
+    totalDowntime.minutes = totalDowntime.minutes % 60;
+    totalDowntime.hours = Math.floor(totalDowntime.minutes / 60);
+    return {allChartData, dateLabels, totalDowntime};
 }
 
 async function getDataInRange(startDate, endDate)

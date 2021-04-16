@@ -4,6 +4,10 @@ body {
     color: white;
   }
 
+p {
+  color: rgb(204 204 204);
+}
+
 /* centers elements  */
 .dropdown-div {
     padding-left: 0;
@@ -66,7 +70,7 @@ button {
 }
 
 .spacelabel{
-      padding-top: 15px;
+    padding-top: 15px;
     text-align: center;
     color: rgba(0, 0, 0, 0.89);
 }
@@ -82,7 +86,7 @@ button {
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
   background-color: #73737352;
-  color: #f8f9fa;
+  color: rgb(204 204 204);
   cursor: pointer;
   padding: 18px;
   width: 100%;
@@ -102,7 +106,8 @@ button {
   padding: 0 18px;
   display: none;
   overflow: hidden;
-  background-color: #265f4f;
+  background-color: #26575fa1;
+  border-radius: 4px;
 }
 
 #summary{
